@@ -4,6 +4,7 @@ import { api } from "../lib/api";
 import { useAuth } from "../context/AuthContext";
 import {
   Badge,
+  Konfirmasi,
   Pagination,
   Pesan,
   inputCls,
@@ -27,6 +28,7 @@ export default function Barang() {
   const [total, setTotal] = useState(0);
   const [cari, setCari] = useState("");
   const [memuat, setMemuat] = useState(true);
+  const [hapusTarget, setHapusTarget] = useState(null);
 
   const muat = useCallback(
     async (hal = 1) => {
@@ -54,7 +56,6 @@ export default function Barang() {
   }, [muat]);
 
   async function hapus(id) {
-    if (!confirm("Hapus barang ini?")) return;
     try {
       await api(`/api/barang/${id}`, { method: "DELETE" });
       setPesan("Barang berhasil dihapus.");
@@ -140,7 +141,7 @@ export default function Barang() {
                         <Link to={`/barang/${b.id}/ubah`} className={tombolKecil}>
                           Ubah
                         </Link>
-                        <button onClick={() => hapus(b.id)} className={tombolHapus}>
+                        <button onClick={() => setHapusTarget(b)} className={tombolHapus}>
                           Hapus
                         </button>
                       </td>
@@ -161,6 +162,22 @@ export default function Barang() {
           onPindah={muat}
         />
       </div>
+
+      <Konfirmasi
+        terbuka={Boolean(hapusTarget)}
+        judul="Hapus Barang"
+        pesan={
+          hapusTarget
+            ? `Hapus ${hapusTarget.kode_barang} - ${hapusTarget.nama}? Tindakan ini tidak bisa dibatalkan.`
+            : ""
+        }
+        onBatal={() => setHapusTarget(null)}
+        onYa={() => {
+          const id = hapusTarget.id;
+          setHapusTarget(null);
+          hapus(id);
+        }}
+      />
     </div>
   );
 }

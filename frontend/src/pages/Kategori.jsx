@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { api } from "../lib/api";
 import { useAuth } from "../context/AuthContext";
 import {
+  Konfirmasi,
   Pagination,
   Pesan,
   tombolHapus,
@@ -22,6 +23,7 @@ export default function Kategori() {
   const [totalHalaman, setTotalHalaman] = useState(1);
   const [total, setTotal] = useState(0);
   const [memuat, setMemuat] = useState(true);
+  const [hapusTarget, setHapusTarget] = useState(null);
 
   async function muat(hal = 1) {
     setMemuat(true);
@@ -45,7 +47,6 @@ export default function Kategori() {
   }, []);
 
   async function hapus(id) {
-    if (!confirm("Hapus kategori ini?")) return;
     try {
       await api(`/api/kategori/${id}`, { method: "DELETE" });
       setPesan("Kategori berhasil dihapus.");
@@ -102,7 +103,7 @@ export default function Kategori() {
                         <Link to={`/kategori/${k.id}/ubah`} className={tombolKecil}>
                           Ubah
                         </Link>
-                        <button onClick={() => hapus(k.id)} className={tombolHapus}>
+                        <button onClick={() => setHapusTarget(k)} className={tombolHapus}>
                           Hapus
                         </button>
                       </td>
@@ -123,6 +124,22 @@ export default function Kategori() {
           onPindah={muat}
         />
       </div>
+
+      <Konfirmasi
+        terbuka={Boolean(hapusTarget)}
+        judul="Hapus Kategori"
+        pesan={
+          hapusTarget
+            ? `Hapus kategori ${hapusTarget.nama}? Tindakan ini tidak bisa dibatalkan.`
+            : ""
+        }
+        onBatal={() => setHapusTarget(null)}
+        onYa={() => {
+          const id = hapusTarget.id;
+          setHapusTarget(null);
+          hapus(id);
+        }}
+      />
     </div>
   );
 }

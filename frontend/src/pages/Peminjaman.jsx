@@ -4,6 +4,7 @@ import { api } from "../lib/api";
 import { useAuth } from "../context/AuthContext";
 import {
   Badge,
+  Konfirmasi,
   Pagination,
   Pesan,
   inputCls,
@@ -30,6 +31,7 @@ export default function Peminjaman() {
   const [total, setTotal] = useState(0);
   const [filterStatus, setFilterStatus] = useState("");
   const [memuat, setMemuat] = useState(true);
+  const [hapusTarget, setHapusTarget] = useState(null);
 
   const muat = useCallback(
     async (hal = 1) => {
@@ -78,7 +80,6 @@ export default function Peminjaman() {
   }
 
   async function hapus(id) {
-    if (!confirm("Hapus peminjaman ini?")) return;
     try {
       await api(`/api/peminjaman/${id}`, { method: "DELETE" });
       setPesan("Peminjaman berhasil dihapus.");
@@ -164,7 +165,7 @@ export default function Peminjaman() {
                             Tandai kembali
                           </button>
                         )}
-                        <button onClick={() => hapus(p.id)} className={tombolHapus}>
+                        <button onClick={() => setHapusTarget(p)} className={tombolHapus}>
                           Hapus
                         </button>
                       </td>
@@ -185,6 +186,22 @@ export default function Peminjaman() {
           onPindah={muat}
         />
       </div>
+
+      <Konfirmasi
+        terbuka={Boolean(hapusTarget)}
+        judul="Hapus Peminjaman"
+        pesan={
+          hapusTarget
+            ? `Hapus peminjaman ${hapusTarget.nama_peminjam} (${hapusTarget.barang ? hapusTarget.barang.nama : ""})? Tindakan ini tidak bisa dibatalkan.`
+            : ""
+        }
+        onBatal={() => setHapusTarget(null)}
+        onYa={() => {
+          const id = hapusTarget.id;
+          setHapusTarget(null);
+          hapus(id);
+        }}
+      />
     </div>
   );
 }

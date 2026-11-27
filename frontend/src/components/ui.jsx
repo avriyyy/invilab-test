@@ -45,6 +45,9 @@ export const tombolPrimer =
 export const tombolHapus =
   "cursor-pointer rounded-md bg-red-700 px-3 py-1 text-xs font-medium text-white hover:bg-red-800";
 
+export const tombolHapusBesar =
+  "cursor-pointer rounded-md bg-red-700 px-4 py-2 text-sm font-medium text-white hover:bg-red-800 disabled:opacity-60";
+
 export const tombolKecil =
   "cursor-pointer rounded-md bg-blue-700 px-3 py-1 text-xs font-medium text-white hover:bg-blue-800";
 
@@ -132,6 +135,43 @@ export function Pagination({ halaman, totalHalaman, total, batas = 10, satuan, o
           Berikutnya
         </button>
       </nav>
+    </div>
+  );
+}
+
+export function Konfirmasi({ terbuka, judul, pesan, onBatal, onYa, sedangProses }) {
+  useEffect(() => {
+    if (!terbuka) return;
+    function kunci(e) {
+      if (e.key === "Escape") onBatal();
+    }
+    window.addEventListener("keydown", kunci);
+    return () => window.removeEventListener("keydown", kunci);
+  }, [terbuka, onBatal]);
+
+  if (!terbuka) return null;
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
+      onClick={onBatal}
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        className="w-full max-w-sm rounded-lg border border-slate-200 bg-white p-5 shadow-lg"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h3 className="text-lg font-semibold">{judul}</h3>
+        <p className="mt-2 text-sm text-slate-600">{pesan}</p>
+        <div className="mt-5 flex justify-end gap-2">
+          <button onClick={onBatal} disabled={sedangProses} className={tombolHantu}>
+            Batal
+          </button>
+          <button onClick={onYa} disabled={sedangProses} className={tombolHapusBesar}>
+            Hapus
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
