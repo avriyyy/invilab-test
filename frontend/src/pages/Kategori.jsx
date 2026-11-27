@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { api } from "../lib/api";
 import { useAuth } from "../context/AuthContext";
 import {
+  Pagination,
   Pesan,
   tombolHapus,
   tombolKecil,
@@ -10,18 +11,26 @@ import {
   usePesanState,
 } from "../components/ui";
 
+const BATAS = 10;
+
 export default function Kategori() {
   const { user } = useAuth();
   const sayaAdmin = user?.role === "admin";
   const { pesan, setPesan, gagal, setGagal } = usePesanState();
   const [daftar, setDaftar] = useState([]);
+  const [halaman, setHalaman] = useState(1);
+  const [totalHalaman, setTotalHalaman] = useState(1);
+  const [total, setTotal] = useState(0);
   const [memuat, setMemuat] = useState(true);
 
-  async function muat() {
+  async function muat(hal = 1) {
     setMemuat(true);
     try {
-      const data = await api("/api/kategori");
-      setDaftar(data.data || []);
+      const data = await api(`/api/kategori?page=${hal}&limit=${BATAS}`);
+      setDaftar(data.data.items || []);
+      setHalaman(data.data.pagination.page);
+      setTotalHalaman(data.data.pagination.total_page);
+      setTotal(data.data.pagination.total);
     } catch (err) {
       setPesan(err.message);
       setGagal(true);
@@ -31,7 +40,7 @@ export default function Kategori() {
   }
 
   useEffect(() => {
-    muat();
+    muat(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -41,7 +50,7 @@ export default function Kategori() {
       await api(`/api/kategori/${id}`, { method: "DELETE" });
       setPesan("Kategori berhasil dihapus.");
       setGagal(false);
-      muat();
+      muat(halaman);
     } catch (err) {
       setPesan(err.message);
       setGagal(true);
@@ -104,6 +113,15 @@ export default function Kategori() {
             </tbody>
           </table>
         </div>
+
+        <Pagination
+          halaman={halaman}
+          totalHalaman={totalHalaman}
+          total={total}
+          batas={BATAS}
+          satuan="kategori"
+          onPindah={muat}
+        />
       </div>
     </div>
   );

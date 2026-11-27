@@ -90,7 +90,7 @@ Request terlindungi mengirim header `Authorization: Bearer <token>`.
 | POST | /api/barang | Tambah barang | Ya | Admin |
 | PUT | /api/barang/:id | Ubah barang | Ya | Admin |
 | DELETE | /api/barang/:id | Hapus barang | Ya | Admin |
-| GET | /api/kategori | Daftar kategori | Ya | Semua |
+| GET | /api/kategori?page=&limit= | Daftar kategori | Ya | Semua |
 | GET | /api/kategori/:id | Detail kategori + barang | Ya | Semua |
 | POST | /api/kategori | Tambah kategori | Ya | Admin |
 | PUT | /api/kategori/:id | Ubah kategori | Ya | Admin |

@@ -16,8 +16,8 @@ export default function BarangForm() {
   const [menyimpan, setMenyimpan] = useState(false);
 
   useEffect(() => {
-    api("/api/kategori")
-      .then((data) => setKategori(data.data || []))
+    api("/api/kategori?limit=100")
+      .then((data) => setKategori(data.data.items || []))
       .catch(() => {});
   }, []);
 

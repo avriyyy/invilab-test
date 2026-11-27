@@ -16,13 +16,21 @@ func NewKategoriHandler(db *gorm.DB) *KategoriHandler {
 	return &KategoriHandler{DB: db}
 }
 
-// List mengembalikan daftar kategori.
+// List mengembalikan daftar kategori dengan pagination.
 func (h *KategoriHandler) List(c fiber.Ctx) error {
+	page, limit, offset := Pagination(c)
+
+	var total int64
+	h.DB.Model(&model.Kategori{}).Count(&total)
+
 	var daftar []model.Kategori
-	if err := h.DB.Order("nama ASC").Find(&daftar).Error; err != nil {
+	if err := h.DB.Order("nama ASC").Limit(limit).Offset(offset).Find(&daftar).Error; err != nil {
 		return Gagal(c, fiber.StatusInternalServerError, "Gagal mengambil data kategori.")
 	}
-	return Sukses(c, fiber.StatusOK, "Daftar kategori ditemukan.", daftar)
+	return Sukses(c, fiber.StatusOK, "Daftar kategori ditemukan.", fiber.Map{
+		"items":      daftar,
+		"pagination": MetaPagination(page, limit, total),
+	})
 }
 
 // Detail mengembalikan satu kategori beserta barang-barangnya.
