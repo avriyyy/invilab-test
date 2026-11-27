@@ -1,17 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>InviLab</title>
-<link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-<script src="js/config.js"></script>
-<script src="js/api.js"></script>
-<script>
-  if (localStorage.getItem("token")) location.href = "barang.html";
-  else location.href = "login.html";
-</script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>InviLab - Inventaris Laboratorium</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>

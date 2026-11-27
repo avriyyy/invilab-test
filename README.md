@@ -3,8 +3,8 @@
 Aplikasi web untuk mencatat barang laboratorium, peminjaman barang, dan kategorinya.
 Dibangun untuk Responsi 2 Praktikum Pemrograman Web 2 (Go Fiber).
 
-Backend REST API Go Fiber v3 + GORM, frontend HTML/CSS/JS biasa, autentikasi JWT
-dengan 2 role (admin dan anggota).
+Backend REST API Go Fiber v3 + GORM, frontend Vite + React + Tailwind CSS,
+autentikasi JWT dengan 2 role (admin dan anggota).
 
 ## Anggota dan Jobdesk
 
@@ -19,7 +19,7 @@ Deployment dan integrasi dibagi bersama setelah jobdesk di atas selesai.
 ## Teknologi
 
 - Backend: Go 1.24, Fiber v3, GORM, MySQL, JWT (golang-jwt), bcrypt
-- Frontend: HTML, CSS, JavaScript (tanpa framework build)
+- Frontend: Vite 8, React 19, React Router 7, Tailwind CSS v4
 - Basis data: MySQL 8 / MariaDB
 
 ## Cara Menjalankan
@@ -45,15 +45,18 @@ docker compose up -d db
 
 ### Frontend
 
-Buka folder `frontend` dengan static server apa saja, contoh:
-
 ```bash
 cd frontend
-python3 -m http.server 8080
+cp .env.example .env
+# isi VITE_API_URL kalau API tidak di http://localhost:3000
+npm install
+npm run dev
 ```
 
-Lalu buka `http://localhost:8080`. Kalau API tidak di `http://localhost:3000`,
-ubah `API_BASE_URL` di `frontend/js/config.js`.
+Lalu buka `http://localhost:8080`. Dev server berjalan di port 8080 supaya
+origin-nya cocok dengan `FRONTEND_URL` di `.env` backend (CORS backend hanya
+mengizinkan origin itu). Untuk build produksi: `npm run build`, hasilnya di
+folder `frontend/dist/`.
 
 ## Akun Demo
 
