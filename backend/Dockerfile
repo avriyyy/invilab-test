@@ -8,7 +8,7 @@ COPY . ./
 RUN CGO_ENABLED=0 GOOS=linux go build -o /invilab-api ./cmd/api
 
 FROM alpine:3.20
-RUN apk add --no-cache ca-certificates
+RUN apk add --no-cache ca-certificates curl
 WORKDIR /app
 COPY --from=build /invilab-api ./
 EXPOSE 3000
