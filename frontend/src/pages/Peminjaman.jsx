@@ -1,40 +1,41 @@
 import { useCallback, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { api } from "../lib/api";
 import { useAuth } from "../context/AuthContext";
 import {
   Badge,
+  Pagination,
   Pesan,
   inputCls,
   labelCls,
-  tombolHantu,
   tombolHapus,
   tombolKecil,
   tombolPrimer,
+  usePesanState,
 } from "../components/ui";
 
 function tanggal(iso) {
   return iso ? iso.slice(0, 10) : "-";
 }
 
+const BATAS = 10;
+
 export default function Peminjaman() {
   const { user } = useAuth();
   const sayaAdmin = user?.role === "admin";
+  const { pesan, setPesan, gagal, setGagal } = usePesanState();
   const [daftar, setDaftar] = useState([]);
-  const [barang, setBarang] = useState([]);
   const [halaman, setHalaman] = useState(1);
   const [totalHalaman, setTotalHalaman] = useState(1);
   const [total, setTotal] = useState(0);
   const [filterStatus, setFilterStatus] = useState("");
   const [memuat, setMemuat] = useState(true);
-  const [pesan, setPesan] = useState("");
-  const [gagal, setGagal] = useState(false);
-  const [form, setForm] = useState({ barang_id: "", nama_peminjam: "", nim: "", tanggal_pinjam: "" });
 
   const muat = useCallback(
     async (hal = 1) => {
       setMemuat(true);
       try {
-        const data = await api(`/api/peminjaman?page=${hal}&limit=10&status=${filterStatus}`);
+        const data = await api(`/api/peminjaman?page=${hal}&limit=${BATAS}&status=${filterStatus}`);
         setDaftar(data.data.items || []);
         setHalaman(data.data.pagination.page);
         setTotalHalaman(data.data.pagination.total_page);
@@ -46,39 +47,12 @@ export default function Peminjaman() {
         setMemuat(false);
       }
     },
-    [filterStatus]
+    [filterStatus, setPesan, setGagal]
   );
-
-  useEffect(() => {
-    api("/api/barang?page=1&limit=100")
-      .then((data) => setBarang(data.data.items || []))
-      .catch(() => {});
-  }, []);
 
   useEffect(() => {
     muat(1);
   }, [muat]);
-
-  async function simpan(e) {
-    e.preventDefault();
-    setPesan("");
-    setGagal(false);
-    const isi = {
-      barang_id: parseInt(form.barang_id, 10),
-      nama_peminjam: form.nama_peminjam.trim(),
-      nim: form.nim.trim(),
-      tanggal_pinjam: form.tanggal_pinjam,
-    };
-    try {
-      await api("/api/peminjaman", { method: "POST", body: JSON.stringify(isi) });
-      setPesan("Peminjaman berhasil dibuat.");
-      setForm({ barang_id: "", nama_peminjam: "", nim: "", tanggal_pinjam: "" });
-      muat(halaman);
-    } catch (err) {
-      setPesan(err.message);
-      setGagal(true);
-    }
-  }
 
   async function tandaiKembali(p) {
     const hariIni = new Date().toISOString().slice(0, 10);
@@ -118,10 +92,15 @@ export default function Peminjaman() {
 
   return (
     <div>
-      <h2 className="mb-4 text-2xl font-bold">Daftar Peminjaman</h2>
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <h2 className="text-2xl font-bold">Daftar Peminjaman</h2>
+        <Link to="/peminjaman/tambah" className={tombolPrimer}>
+          Pinjam Barang
+        </Link>
+      </div>
       <Pesan teks={pesan} gagal={gagal} />
 
-      <div className="mb-4 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+      <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
         <div className="max-w-xs">
           <label htmlFor="filter-status" className={labelCls}>
             Status
@@ -148,7 +127,7 @@ export default function Peminjaman() {
                 <th className="px-3 py-2">Tgl Pinjam</th>
                 <th className="px-3 py-2">Tgl Kembali</th>
                 <th className="px-3 py-2">Status</th>
-                {sayaAdmin && <th className="px-3 py-2">Aksi</th>}
+                {sayaAdmin && <th className="px-3 py-2 text-right">Aksi</th>}
               </tr>
             </thead>
             <tbody>
@@ -170,13 +149,16 @@ export default function Peminjaman() {
                     <td className="px-3 py-2">{p.barang ? p.barang.nama : "-"}</td>
                     <td className="px-3 py-2">{p.nama_peminjam}</td>
                     <td className="px-3 py-2">{p.nim}</td>
-                    <td className="px-3 py-2">{tanggal(p.tanggal_pinjam)}</td>
-                    <td className="px-3 py-2">{tanggal(p.tanggal_kembali)}</td>
+                    <td className="px-3 py-2 whitespace-nowrap">{tanggal(p.tanggal_pinjam)}</td>
+                    <td className="px-3 py-2 whitespace-nowrap">{tanggal(p.tanggal_kembali)}</td>
                     <td className="px-3 py-2">
                       <Badge warna={p.status === "Dipinjam" ? "biru" : "hijau"}>{p.status}</Badge>
                     </td>
                     {sayaAdmin && (
-                      <td className="space-x-2 px-3 py-2">
+                      <td className="space-x-2 px-3 py-2 text-right whitespace-nowrap">
+                        <Link to={`/peminjaman/${p.id}/ubah`} className={tombolKecil}>
+                          Ubah
+                        </Link>
                         {p.status === "Dipinjam" && (
                           <button onClick={() => tandaiKembali(p)} className={tombolKecil}>
                             Tandai kembali
@@ -194,92 +176,14 @@ export default function Peminjaman() {
           </table>
         </div>
 
-        <div className="mt-4 flex items-center gap-3">
-          <button
-            onClick={() => muat(halaman - 1)}
-            disabled={halaman <= 1}
-            className={`${tombolHantu} disabled:opacity-50`}
-          >
-            Sebelumnya
-          </button>
-          <span className="text-sm text-slate-600">
-            Halaman {halaman} dari {totalHalaman} ({total} peminjaman)
-          </span>
-          <button
-            onClick={() => muat(halaman + 1)}
-            disabled={halaman >= totalHalaman}
-            className={`${tombolHantu} disabled:opacity-50`}
-          >
-            Berikutnya
-          </button>
-        </div>
-      </div>
-
-      <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-        <h3 className="mb-3 text-lg font-semibold">Pinjam Barang</h3>
-        <form onSubmit={simpan} className="space-y-4">
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <label htmlFor="barang" className={labelCls}>
-                Barang
-              </label>
-              <select
-                id="barang"
-                required
-                value={form.barang_id}
-                onChange={(e) => setForm({ ...form, barang_id: e.target.value })}
-                className={inputCls}
-              >
-                <option value="">Pilih barang</option>
-                {barang.map((b) => (
-                  <option key={b.id} value={b.id}>
-                    {b.nama} ({b.kode_barang})
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label htmlFor="nama-peminjam" className={labelCls}>
-                Nama peminjam
-              </label>
-              <input
-                id="nama-peminjam"
-                required
-                value={form.nama_peminjam}
-                onChange={(e) => setForm({ ...form, nama_peminjam: e.target.value })}
-                className={inputCls}
-              />
-            </div>
-            <div>
-              <label htmlFor="nim" className={labelCls}>
-                NIM
-              </label>
-              <input
-                id="nim"
-                required
-                value={form.nim}
-                onChange={(e) => setForm({ ...form, nim: e.target.value })}
-                className={inputCls}
-              />
-            </div>
-            <div>
-              <label htmlFor="tanggal-pinjam" className={labelCls}>
-                Tanggal pinjam
-              </label>
-              <input
-                id="tanggal-pinjam"
-                type="date"
-                required
-                value={form.tanggal_pinjam}
-                onChange={(e) => setForm({ ...form, tanggal_pinjam: e.target.value })}
-                className={inputCls}
-              />
-            </div>
-          </div>
-          <button type="submit" className={tombolPrimer}>
-            Buat Peminjaman
-          </button>
-        </form>
+        <Pagination
+          halaman={halaman}
+          totalHalaman={totalHalaman}
+          total={total}
+          batas={BATAS}
+          satuan="peminjaman"
+          onPindah={muat}
+        />
       </div>
     </div>
   );
