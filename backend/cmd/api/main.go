@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/cors"
@@ -17,6 +18,14 @@ import (
 	"invilab/internal/router"
 	"invilab/internal/seed"
 )
+
+func originsCORS(frontend string) []string {
+	origins := []string{frontend}
+	if strings.Contains(frontend, "localhost") {
+		origins = append(origins, strings.Replace(frontend, "localhost", "127.0.0.1", 1))
+	}
+	return origins
+}
 
 func main() {
 	_ = godotenv.Load()
@@ -53,7 +62,8 @@ func main() {
 	app.Use(recover.New())
 	app.Use(logger.New())
 	app.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{cfg.Frontend},
+		// Izinkan juga varian 127.0.0.1 dari origin yang sama.
+		AllowOrigins:     originsCORS(cfg.Frontend),
 		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowCredentials: true,
