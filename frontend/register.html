@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daftar - InviLab</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<main class="form-sempit">
+  <div class="card">
+    <h2>Daftar akun</h2>
+    <p>Akun baru otomatis berperan sebagai anggota.</p>
+    <div id="pesan" class="pesan"></div>
+    <form id="form-register">
+      <label for="nama">Nama</label>
+      <input id="nama" type="text" required minlength="3">
+      <label for="email">Email</label>
+      <input id="email" type="email" required>
+      <label for="password">Kata sandi (minimal 6 karakter)</label>
+      <input id="password" type="password" required minlength="6">
+      <div style="margin-top:16px"><button type="submit" id="tombol">Daftar</button></div>
+    </form>
+    <p>Sudah punya akun? <a href="login.html">Masuk</a></p>
+  </div>
+</main>
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script>
+  document.getElementById("form-register").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const tombol = document.getElementById("tombol");
+    tombol.disabled = true;
+    tombol.textContent = "Memproses...";
+    try {
+      await api("/api/auth/register", {
+        method: "POST",
+        body: JSON.stringify({
+          nama: document.getElementById("nama").value.trim(),
+          email: document.getElementById("email").value.trim(),
+          password: document.getElementById("password").value,
+        }),
+      });
+      tampilPesan(document.getElementById("pesan"), "Akun berhasil dibuat, silakan masuk.");
+      setTimeout(() => location.href = "login.html", 1200);
+    } catch (err) {
+      tampilPesan(document.getElementById("pesan"), err.message, false);
+      tombol.disabled = false;
+      tombol.textContent = "Daftar";
+    }
+  });
+</script>
+</body>
+</html>

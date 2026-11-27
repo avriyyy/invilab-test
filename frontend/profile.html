@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profil - InviLab</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+  <h1><a href="barang.html">InviLab</a></h1>
+  <nav>
+    <a href="barang.html">Barang</a>
+    <a href="peminjaman.html">Peminjaman</a>
+    <a href="kategori.html">Kategori</a>
+    <a href="profile.html">Profil</a>
+    <a href="#" onclick="logout(); return false;">Keluar</a>
+  </nav>
+</header>
+<main>
+  <h2>Profil Saya</h2>
+  <div id="pesan" class="pesan"></div>
+  <div class="card">
+    <p><strong>Nama:</strong> <span id="profil-nama">Memuat...</span></p>
+    <p><strong>Email:</strong> <span id="profil-email"></span></p>
+    <p><strong>Role:</strong> <span id="profil-role" class="tag"></span></p>
+    <div style="margin-top:16px"><button class="danger" onclick="logout()">Keluar</button></div>
+  </div>
+</main>
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script>
+  wajibLogin();
+  api("/api/auth/profile").then((data) => {
+    document.getElementById("profil-nama").textContent = data.data.nama;
+    document.getElementById("profil-email").textContent = data.data.email;
+    document.getElementById("profil-role").textContent = data.data.role;
+  }).catch((err) => tampilPesan(document.getElementById("pesan"), err.message, false));
+</script>
+</body>
+</html>

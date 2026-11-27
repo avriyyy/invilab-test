@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kategori - InviLab</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+  <h1><a href="barang.html">InviLab</a></h1>
+  <nav>
+    <a href="barang.html">Barang</a>
+    <a href="peminjaman.html">Peminjaman</a>
+    <a href="kategori.html">Kategori</a>
+    <a href="profile.html">Profil</a>
+    <a href="#" onclick="logout(); return false;">Keluar</a>
+  </nav>
+</header>
+<main>
+  <h2>Daftar Kategori</h2>
+  <div id="pesan" class="pesan"></div>
+  <div class="card">
+    <table>
+      <thead>
+        <tr><th>Nama</th><th>Deskripsi</th><th id="kolom-aksi">Aksi</th></tr>
+      </thead>
+      <tbody id="tabel-kategori"></tbody>
+    </table>
+  </div>
+  <div class="card" id="card-form" style="display:none">
+    <h3 id="judul-form">Tambah Kategori</h3>
+    <form id="form-kategori">
+      <label for="nama">Nama</label>
+      <input id="nama" required>
+      <label for="deskripsi">Deskripsi</label>
+      <input id="deskripsi">
+      <div style="margin-top:16px">
+        <button type="submit">Simpan</button>
+        <button type="button" class="ghost" onclick="tutupForm()">Batal</button>
+      </div>
+    </form>
+  </div>
+  <button id="tombol-tambah" onclick="bukaForm()" style="display:none">Tambah Kategori</button>
+</main>
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script src="js/kategori.js"></script>
+</body>
+</html>
