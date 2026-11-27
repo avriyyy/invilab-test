@@ -13,19 +13,33 @@ import (
 // dua akun demo (admin dan anggota), empat kategori, delapan barang,
 // dan dua peminjaman contoh. Dijalankan sekali saat server pertama
 // kali menyala dengan basis data kosong.
+//
+// Dua akun demo dipastikan di setiap boot (bukan hanya saat seed):
+// kalau akun demo sudah ada tapi rolenya salah, rolenya dibetulkan.
+// Ini menjaga akun admin tetap admin walau barisnya dibuat lebih
+// dulu oleh proses lain.
 func Run(db *gorm.DB) {
-	var jumlah int64
-	db.Model(&model.User{}).Count(&jumlah)
-	if jumlah > 0 {
+	pastikanAkun := func(nama, email, password, role string) {
+		var user model.User
+		if err := db.Where("email = ?", email).First(&user).Error; err != nil {
+			hash, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+			db.Create(&model.User{Nama: nama, Email: email, Password: string(hash), Role: role})
+			return
+		}
+		if user.Role != role {
+			db.Model(&user).Update("role", role)
+		}
+	}
+	pastikanAkun("Admin InviLab", "admin@invilab.test", "admin123", "admin")
+	pastikanAkun("Anggota InviLab", "anggota@invilab.test", "anggota123", "anggota")
+
+	// Data contoh (kategori, barang, peminjaman) hanya diisi sekali,
+	// kalau tabel kategori masih kosong.
+	var jumlahKategori int64
+	db.Model(&model.Kategori{}).Count(&jumlahKategori)
+	if jumlahKategori > 0 {
 		return
 	}
-
-	buatAkun := func(nama, email, password, role string) {
-		hash, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-		db.Create(&model.User{Nama: nama, Email: email, Password: string(hash), Role: role})
-	}
-	buatAkun("Admin InviLab", "admin@invilab.test", "admin123", "admin")
-	buatAkun("Anggota InviLab", "anggota@invilab.test", "anggota123", "anggota")
 
 	kategoris := []model.Kategori{
 		{Nama: "Laptop", Deskripsi: "Laptop dan aksesorinya"},
