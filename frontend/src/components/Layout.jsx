@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
@@ -42,12 +43,29 @@ function IkonKeluar() {
 
 export default function Layout() {
   const { user, logout } = useAuth();
+  const [menuTerbuka, setMenuTerbuka] = useState(false);
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    if (!menuTerbuka) return;
+    function tutup(e) {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setMenuTerbuka(false);
+      }
+    }
+    function kunci(e) {
+      if (e.key === "Escape") setMenuTerbuka(false);
+    }
+    document.addEventListener("mousedown", tutup);
+    window.addEventListener("keydown", kunci);
+    return () => {
+      document.removeEventListener("mousedown", tutup);
+      window.removeEventListener("keydown", kunci);
+    };
+  }, [menuTerbuka]);
+
   const dasar = "rounded-md px-3 py-2 text-sm text-blue-100 hover:bg-blue-900 hover:text-white";
   const tautan = ({ isActive }) => dasar + (isActive ? " bg-blue-900 text-white" : "");
-  const tombolIkon =
-    "flex h-9 w-9 cursor-pointer items-center justify-center rounded-md text-blue-100 hover:bg-blue-900 hover:text-white";
-  const tautanIkon = ({ isActive }) =>
-    tombolIkon + (isActive ? " bg-blue-900 text-white" : "");
 
   return (
     <div className="min-h-screen bg-slate-100 text-slate-800">
@@ -56,7 +74,7 @@ export default function Layout() {
           <NavLink to="/barang" className="mr-2 text-xl font-bold">
             InviLab
           </NavLink>
-          <nav className="flex flex-1 flex-wrap items-center gap-1">
+          <nav className="ml-auto flex flex-wrap items-center gap-1">
             <NavLink to="/barang" className={tautan}>
               Barang
             </NavLink>
@@ -67,29 +85,41 @@ export default function Layout() {
               Kategori
             </NavLink>
           </nav>
-          <div className="flex items-center gap-1">
-            {user && (
-              <span
-                className={`mr-1 rounded-full px-2.5 py-1 text-xs font-medium ring-1 ${
-                  user.role === "admin"
-                    ? "bg-blue-500/30 text-blue-100 ring-blue-300/50"
-                    : "bg-white/10 text-blue-100 ring-white/25"
-                }`}
-              >
-                {user.role === "admin" ? "Admin" : "Anggota"}
-              </span>
-            )}
-            <NavLink to="/profile" title="Profil" aria-label="Profil" className={tautanIkon}>
-              <IkonPengguna />
-            </NavLink>
+          <div className="relative" ref={menuRef}>
             <button
-              onClick={logout}
-              title="Keluar"
-              aria-label="Keluar"
-              className={tombolIkon}
+              onClick={() => setMenuTerbuka((buka) => !buka)}
+              title="Akun"
+              aria-label="Menu akun"
+              aria-expanded={menuTerbuka}
+              className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-md text-blue-100 hover:bg-blue-900 hover:text-white"
             >
-              <IkonKeluar />
+              <IkonPengguna />
             </button>
+            {menuTerbuka && user && (
+              <div className="absolute right-0 top-full z-20 mt-2 w-56 rounded-lg border border-slate-200 bg-white p-4 text-slate-800 shadow-lg">
+                <p className="font-semibold">{user.nama}</p>
+                <p className="mt-0.5 truncate text-sm text-slate-500">{user.email}</p>
+                <span
+                  className={`mt-2 inline-block rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                    user.role === "admin"
+                      ? "bg-blue-100 text-blue-800"
+                      : "bg-slate-200 text-slate-700"
+                  }`}
+                >
+                  {user.role === "admin" ? "Admin" : "Anggota"}
+                </span>
+                <button
+                  onClick={() => {
+                    setMenuTerbuka(false);
+                    logout();
+                  }}
+                  className="mt-3 flex w-full cursor-pointer items-center justify-center gap-2 rounded-md bg-red-700 px-3 py-2 text-sm font-medium text-white hover:bg-red-800"
+                >
+                  <IkonKeluar />
+                  Keluar
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </header>
