@@ -18,7 +18,7 @@ Deployment dan integrasi dibagi bersama setelah jobdesk di atas selesai.
 
 ## Teknologi
 
-- Backend: Go 1.24, Fiber v3, GORM, MySQL, JWT (golang-jwt), bcrypt
+- Backend: Go 1.26, Fiber v3, GORM, MySQL, JWT (golang-jwt), bcrypt
 - Frontend: Vite 8, React 19, React Router 7, Tailwind CSS v4
 - Basis data: MySQL 8 / MariaDB
 
@@ -73,8 +73,9 @@ tidak bisa memilih role admin.
 - Frontend: https://invilab.apriyudha.my.id
 - Backend: https://api-invilab.apriyudha.my.id
 
-Deployment sedang berjalan di Coolify (project `responsi2`). Basis data
-sudah siap: MySQL `invilab-mysql` (database `invilab`).
+Frontend sudah live di https://invilab.apriyudha.my.id. Backend sedang
+di-deploy di Coolify (project `responsi2`). Basis data sudah siap:
+MySQL `invilab-mysql` (database `invilab`).
 
 ## Deployment (Coolify)
 
