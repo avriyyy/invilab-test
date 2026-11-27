@@ -70,8 +70,25 @@ tidak bisa memilih role admin.
 
 ## URL Deployment
 
-- Frontend: (menyusul)
-- Backend: (menyusul)
+- Frontend: https://invilab.apriyudha.my.id
+- Backend: https://api-invilab.apriyudha.my.id
+
+Deployment sedang berjalan di Coolify (project `responsi2`). Basis data
+sudah siap: MySQL `invilab-mysql` (database `invilab`).
+
+## Deployment (Coolify)
+
+- Project Coolify: `responsi2`, environment `production`.
+- Backend (`invilab-api`): repo ini, branch `main`, base directory
+  `/backend`, build pack Dockerfile (`backend/Dockerfile`), port 3000.
+  Env yang wajib diisi: `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`,
+  `DB_NAME`, `JWT_SECRET`, `FRONTEND_URL`, `APP_PORT`.
+- Frontend (`invilab-web`): repo ini, branch `main`, base directory
+  `/frontend`, build pack static SPA (`npm ci`, `npm run build`,
+  publish directory `dist`). Env yang wajib diisi: `VITE_API_URL`
+  (URL backend produksi).
+- Domain sudah dibuat (Cloudflare, proxied): `invilab.apriyudha.my.id`
+  untuk frontend dan `api-invilab.apriyudha.my.id` untuk backend.
 
 ## Dokumentasi API
 
