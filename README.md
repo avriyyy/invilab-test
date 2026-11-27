@@ -73,9 +73,9 @@ tidak bisa memilih role admin.
 - Frontend: https://invilab.apriyudha.my.id
 - Backend: https://api-invilab.apriyudha.my.id
 
-Frontend sudah live di https://invilab.apriyudha.my.id. Backend sedang
-di-deploy di Coolify (project `responsi2`). Basis data sudah siap:
-MySQL `invilab-mysql` (database `invilab`).
+Frontend dan backend sudah live. Backend di-deploy di Coolify
+(project `responsi2`). Basis data sudah siap: MySQL `invilab-mysql`
+(database `invilab`).
 
 ## Deployment (Coolify)
 
