@@ -2,7 +2,7 @@
 
 Dokumen ini dibaca semua anggota sebelum mulai. Tujuannya satu: environment sama, repo sama, alur git sama, dan tiap jobdesk bisa kerja paralel tanpa menunggu yang lain.
 
-Repo: `https://github.com/avriyyy/invilab-test.git` (branch `main`). Aplikasi yang dibangun: **InviLab**, inventaris laboratorium (barang, peminjaman, kategori) dengan backend Go Fiber v3 + frontend Vite + React.
+Repo: `https://github.com/avriyyy/praktikum_pemweb2-responsi2-a3.git` (branch `main`). Aplikasi yang dibangun: **InviLab**, inventaris laboratorium (barang, peminjaman, kategori) dengan backend Go Fiber v3 + frontend Vite + React.
 
 ## 1. Spesifikasi dependency (wajib sama)
 
@@ -20,14 +20,14 @@ Kenapa disamakan: beda versi Go bikin build gagal (`go.mod requires go >= 1.26.0
 Clone lalu siapkan `.env` sendiri (jangan commit `.env`):
 
 ```bash
-git clone https://github.com/avriyyy/invilab-test.git
-cd invilab-test
+git clone https://github.com/avriyyy/praktikum_pemweb2-responsi2-a3.git
+cd praktikum_pemweb2-responsi2-a3
 ```
 
 Struktur repo (yang dikerjakan ada di `backend/` dan `frontend/`):
 
 ```text
-invilab-test/
+praktikum_pemweb2-responsi2-a3/
   README.md
   docker-compose.yml        # MySQL lokal untuk development
   backend/                  # Go Fiber v3 + GORM
