@@ -1194,12 +1194,12 @@ Isi tabel anggota di `README.md` dengan nama sesuai jobdesk yang dipegang masing
 menjadi (kelompok: Apriyudha H1H024010, Difa' Tamaya Maulidina Adz Dzikro H1H024019, Afif Nur Rahman H1H024016; tiap anggota mengisi baris jobdesk yang dipegangnya):
 
 ```markdown
-| Apriyudha | Jobdesk 1: fondasi backend + CRUD Barang, termasuk pagination + pencarian di GET /api/barang |
-| Difa' Tamaya Maulidina Adz Dzikro | Jobdesk 2: autentikasi (admin + anggota) + CRUD Peminjaman, termasuk relasi Preload Barang |
-| Afif Nur Rahman | Jobdesk 3: CRUD Kategori + frontend dan integrasi (halaman ketiga resource, integrasi FE-BE) |
+| Difa' Tamaya Maulidina Adz Dzikro | Jobdesk 1: fondasi backend + CRUD Barang, termasuk pagination + pencarian di GET /api/barang |
+| Afif Nur Rahman | Jobdesk 2: autentikasi (admin + anggota) + CRUD Peminjaman, termasuk relasi Preload Barang |
+| Apriyudha | Jobdesk 3: CRUD Kategori + frontend dan integrasi (halaman ketiga resource, integrasi FE-BE) |
 ```
 
-Contoh di atas memakai urutan nama sesuai urutan jobdesk; sesuaikan dengan pembagian yang disepakati kelompok. Setelah video presentasi diunggah ke YouTube, ganti `(menyusul)` di bagian Video Presentasi dengan tautan videonya. **Commit:** `docs: isi jobdesk + tautan video di README` → push boleh.
+Pembagian di atas sudah sesuai hasil acak kelompok (Difa' J1, Afif J2, Apriyudha J3). Setelah video presentasi diunggah ke YouTube, ganti `(menyusul)` di bagian Video Presentasi dengan tautan videonya. **Commit:** `docs: isi jobdesk + tautan video di README` → push boleh.
 
 Cek deployment (setelah semua jobdesk push ke `main` dan aplikasi sudah di-deploy):
 
