@@ -2,9 +2,9 @@
 
 **CRUD milikmu (backend + halaman): Peminjaman**
 
-**Branch:** `jobdesk-2` (buat setelah `jobdesk-1` merge: `git checkout main && git pull && git checkout -b jobdesk-2`; merge via PR setelah checklist hijau).
+**Cara kerja:** langsung di branch `main`, tidak buat branch baru (mulai setelah `jobdesk-1` di-push ke main; `git pull` dulu sebelum mulai, commit + push langsung ke `main` setelah tiap langkah lolos cek).
 
-Kamu membangun autentikasi (admin + anggota) dan CRUD Peminjaman end-to-end. Branch dari `main` terbaru yang sudah berisi `jobdesk-1`. Baca `inisialisasi.md` dulu, terutama kontrak di bagian 3.
+Kamu membangun autentikasi (admin + anggota) dan CRUD Peminjaman end-to-end. Kerja langsung di `main` terbaru yang sudah berisi `jobdesk-1`. Baca `inisialisasi.md` dulu, terutama kontrak di bagian 3.
 
 ## Langkah 1 - Middleware autentikasi + role
 
@@ -665,7 +665,7 @@ Tambahkan blok peminjaman contoh tepat sebelum kurung tutup `func Run` (akhir fi
 	})
 ```
 
-Catatan: seed peminjaman memakai `barang[0].ID` dan `barang[2].ID` dari seed barang jobdesk-1. Di tahap ini baris barang belum masuk basis data (seed kategori baru masuk di jobdesk-3), jadi peminjaman contoh gagal masuk secara diam-diam dan `GET /api/peminjaman` masih kosong. Itu normal; peminjaman contoh terisi setelah jobdesk-3 merge.
+Catatan: seed peminjaman memakai `barang[0].ID` dan `barang[2].ID` dari seed barang jobdesk-1. Di tahap ini baris barang belum masuk basis data (seed kategori baru masuk di jobdesk-3), jadi peminjaman contoh gagal masuk secara diam-diam dan `GET /api/peminjaman` masih kosong. Itu normal; peminjaman contoh terisi setelah jobdesk-3 push ke main.
 
 ## Langkah 7 - Verifikasi backend
 
@@ -1290,7 +1290,7 @@ export default function Peminjaman() {
 
 ## Langkah 12 - Halaman form Peminjaman
 
-Form pinjam barang (semua role yang sudah login) dan ubah peminjaman (admin saja, dengan tanggal kembali + status). Dropdown barang memuat dari `GET /api/barang?page=1&limit=100`; dropdown masih kosong sampai seed barang terisi setelah jobdesk-3 merge. **Commit:** `feat: halaman form Peminjaman` → push boleh.
+Form pinjam barang (semua role yang sudah login) dan ubah peminjaman (admin saja, dengan tanggal kembali + status). Dropdown barang memuat dari `GET /api/barang?page=1&limit=100`; dropdown masih kosong sampai seed barang terisi setelah jobdesk-3 push ke main. **Commit:** `feat: halaman form Peminjaman` → push boleh.
 
 **Path:** `frontend/src/pages/PeminjamanForm.jsx`
 
@@ -1508,4 +1508,4 @@ export default function PeminjamanForm() {
 - [ ] Tanpa token dijawab 401; anggota `POST /api/barang` dijawab 403
 - [ ] `GET /api/peminjaman` menjawab bentuk pagination `{items, pagination{page, limit, total, total_page}}`
 - [ ] Halaman Login, Register, Profile, Peminjaman, PeminjamanForm mengikuti kontrak `api()`, `useAuth()`, dan `ui.jsx` di `inisialisasi.md`
-- [ ] Merge ke `main` via PR, 1 approve teman
+- [ ] Semua langkah sudah di-push langsung ke `main`

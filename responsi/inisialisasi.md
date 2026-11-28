@@ -216,28 +216,29 @@ File `frontend/src/components/ui.jsx` (milik jobdesk-3):
 
 Akun demo hanya untuk pengujian. Seed memastikan akun ini ada di setiap boot (kalau rolenya salah, dibetulkan).
 
-## 4. Branch per jobdesk + aturan merge ke main
+## 4. Kerja langsung di main (tanpa branch baru)
 
-Jangan coding di `main`. Masing-masing buat branch sendiri dari `main` terbaru:
+Tidak ada branch baru dan tidak ada Pull Request. Semua anggota kerja langsung di branch `main` supaya cepat. Caranya:
 
 ```bash
-git checkout main && git pull
-git checkout -b jobdesk-1   # Jobdesk 1: fondasi backend + CRUD Barang
-git checkout -b jobdesk-2   # Jobdesk 2: autentikasi + CRUD Peminjaman
-git checkout -b jobdesk-3   # Jobdesk 3: CRUD Kategori + frontend + integrasi
+git checkout main && git pull   # selalu pull dulu sebelum mulai kerja
+# ... kerjakan 1 langkah besar ...
+git add <file yang diubah>
+git commit -m "tipe: penjelasan singkat"
+git push   # langsung ke main
 ```
 
-Push branch + buka Pull Request ke `main`, minta 1 approve teman, lalu merge. Selesaikan konflik di branch sendiri, jangan di `main`.
+Kalau `git push` ditolak karena `main` sudah maju (teman sudah push duluan): `git pull` dulu, selesaikan konflik kalau ada, lalu `git push` lagi. Jangan pakai `git push --force`.
 
-**Kapan merge ke main (sampai mana):**
+**Urutan kerja (sampai mana push ke main):**
 
-| Branch | Merge ke main saat |
+| Jobdesk | Push ke main saat |
 | ------ | ------------------ |
 | `jobdesk-1` | Checklist serah terima jobdesk-1 hijau: `go build ./...` lolos, `GET /api/status` 200, `GET /api/barang` menjawab bentuk pagination |
-| `jobdesk-2` | Checkout dari `main` yang sudah ada `jobdesk-1`; merge saat checklist serah terima jobdesk-2 hijau (login 2 role, 403 anggota, CRUD peminjaman lolos curl) |
-| `jobdesk-3` | Checkout dari `main` yang sudah ada `jobdesk-1`; merge saat checklist akhir hijau + `npm run build` lolos + verifikasi akhir di jobdesk-3 hijau |
+| `jobdesk-2` | Kerja dari `main` yang sudah ada `jobdesk-1`; push saat checklist serah terima jobdesk-2 hijau (login 2 role, 403 anggota, CRUD peminjaman lolos curl) |
+| `jobdesk-3` | Kerja dari `main` yang sudah ada `jobdesk-1`; push saat checklist akhir hijau + `npm run build` lolos + verifikasi akhir di jobdesk-3 hijau |
 
-Aturan: `jobdesk-1` dulu (fondasi). `jobdesk-2` dan `jobdesk-3` mulai setelah `jobdesk-1` merge, dan kerja paralel dari `main` terbaru. Bila `main` maju saat kamu kerja: `git checkout main && git pull`, kembali ke branch, `git merge main`, selesaikan konflik, push lagi.
+Aturan: `jobdesk-1` dulu (fondasi). `jobdesk-2` dan `jobdesk-3` mulai setelah `jobdesk-1` di-push ke `main`, dan kerja paralel dari `main` terbaru. Sebelum mulai tiap langkah, `git pull` dulu supaya kamu kerja dari `main` terbaru.
 
 **Titik gabung (file bersama, satu pemilik per file):**
 
@@ -250,7 +251,7 @@ Aturan: `jobdesk-1` dulu (fondasi). `jobdesk-2` dan `jobdesk-3` mulai setelah `j
 | `frontend/src/App.jsx` | Jobdesk 3 | - (dibaca kontrak route di bagian 3, ditulis penuh oleh jobdesk 3) |
 | `README.md` | Jobdesk 3 (update jobdesk + video) | - |
 
-Kalau dua branch mengubah baris yang sama di file bersama (misal baris `AutoMigrate` di `main.go`), yang merge belakangan menyelesaikan konflik dengan memakai baris final yang tertulis di md jobdesk-3. Isi file final harus sama persis dengan yang ada di repo ini sekarang.
+Kalau dua anggota mengubah baris yang sama di file bersama (misal baris `AutoMigrate` di `main.go`), yang push belakangan menyelesaikan konflik saat `git pull` dengan memakai baris final yang tertulis di md jobdesk-3. Isi file final harus sama persis dengan yang ada di repo ini sekarang.
 
 ## 5. Aturan commit & push
 
@@ -278,7 +279,7 @@ go vet ./...
 npm run build
 ```
 
-Merge ke `main` via Pull Request, 1 approve teman. Konflik `go.sum` atau `package-lock.json`: jangan edit manual, jalankan `go mod tidy` atau `npm install` lalu commit hasilnya.
+Push langsung ke `main` setelah tiap langkah besar selesai dan lolos cek. Konflik `go.sum` atau `package-lock.json`: jangan edit manual, jalankan `go mod tidy` atau `npm install` lalu commit hasilnya.
 
 ## 6. Pembagian kerja (detail di file masing-masing)
 

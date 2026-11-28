@@ -2,7 +2,7 @@
 
 **CRUD milikmu (backend + halaman): Barang**
 
-**Branch:** `jobdesk-1` (buat: `git checkout main && git pull && git checkout -b jobdesk-1`; merge via PR setelah checklist hijau).
+**Cara kerja:** langsung di branch `main`, tidak buat branch baru (`git pull` dulu sebelum mulai, commit + push langsung ke `main` setelah tiap langkah lolos cek).
 
 Kamu membangun fondasi backend (config, format respons, model, router, seed) dan CRUD Barang end-to-end. Baca `inisialisasi.md` dulu, terutama kontrak di bagian 3.
 
@@ -618,7 +618,7 @@ func Run(db *gorm.DB) {
 }
 ```
 
-Catatan seed: baris barang memakai `KategoriID` angka 1-4. Baris barang baru benar-benar masuk ke basis data setelah seed kategori dari jobdesk-3 merge, karena foreign key `kategori_id` menunjuk tabel kategoris. Sebelum itu, `GET /api/barang` mengembalikan daftar kosong dan `POST /api/barang` dijawab 422. Itu normal di tahap ini; checklist di bawah sudah memperhitungkannya. Jobdesk-2 menambahkan akun demo di awal `Run`, jobdesk-3 mengganti blok gate di atas dengan gate kategori + seed kategori.
+Catatan seed: baris barang memakai `KategoriID` angka 1-4. Baris barang baru benar-benar masuk ke basis data setelah seed kategori dari jobdesk-3 di-push ke main, karena foreign key `kategori_id` menunjuk tabel kategoris. Sebelum itu, `GET /api/barang` mengembalikan daftar kosong dan `POST /api/barang` dijawab 422. Itu normal di tahap ini; checklist di bawah sudah memperhitungkannya. Jobdesk-2 menambahkan akun demo di awal `Run`, jobdesk-3 mengganti blok gate di atas dengan gate kategori + seed kategori.
 
 ## Langkah 5 - Dockerfile backend
 
@@ -864,7 +864,7 @@ export default function Barang() {
 
 ## Langkah 8 - Halaman form Barang
 
-Form tambah dan ubah barang di satu file (mode tambah kalau tidak ada `:id` di URL, mode ubah kalau ada). Dropdown kategori memuat dari `GET /api/kategori?limit=100`; dropdown masih kosong sampai API kategori dari jobdesk-3 merge. Setelah simpan berhasil, kembali ke daftar dengan pesan sukses. **Commit:** `feat: halaman form Barang` → push boleh.
+Form tambah dan ubah barang di satu file (mode tambah kalau tidak ada `:id` di URL, mode ubah kalau ada). Dropdown kategori memuat dari `GET /api/kategori?limit=100`; dropdown masih kosong sampai API kategori dari jobdesk-3 di-push ke main. Setelah simpan berhasil, kembali ke daftar dengan pesan sukses. **Commit:** `feat: halaman form Barang` → push boleh.
 
 **Path:** `frontend/src/pages/BarangForm.jsx`
 
@@ -1060,4 +1060,4 @@ export default function BarangForm() {
 - [ ] `GET /api/barang` menjawab bentuk pagination `{items, pagination{page, limit, total, total_page}}`
 - [ ] `POST /api/barang` tanpa kategori dijawab 422 `Kategori tidak ditemukan.`
 - [ ] Halaman `Barang.jsx` dan `BarangForm.jsx` mengikuti kontrak `api()`, `useAuth()`, dan `ui.jsx` di `inisialisasi.md`
-- [ ] Merge ke `main` via PR, 1 approve teman
+- [ ] Semua langkah sudah di-push langsung ke `main`

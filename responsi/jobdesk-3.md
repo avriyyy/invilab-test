@@ -2,9 +2,9 @@
 
 **CRUD milikmu (backend + halaman): Kategori**
 
-**Branch:** `jobdesk-3` (buat setelah `jobdesk-1` merge: `git checkout main && git pull && git checkout -b jobdesk-3`; merge via PR setelah checklist hijau).
+**Cara kerja:** langsung di branch `main`, tidak buat branch baru (mulai setelah `jobdesk-1` di-push ke main; `git pull` dulu sebelum mulai, commit + push langsung ke `main` setelah tiap langkah lolos cek).
 
-Kamu membangun CRUD Kategori, komponen UI bersama, layout, routing, skeleton frontend, dan verifikasi akhir. Branch dari `main` terbaru yang sudah berisi `jobdesk-1`, kerja paralel dengan `jobdesk-2`. Baca `inisialisasi.md` dulu, terutama kontrak di bagian 3.
+Kamu membangun CRUD Kategori, komponen UI bersama, layout, routing, skeleton frontend, dan verifikasi akhir. Kerja langsung di `main` terbaru yang sudah berisi `jobdesk-1`, paralel dengan `jobdesk-2`. Baca `inisialisasi.md` dulu, terutama kontrak di bagian 3.
 
 ## Langkah 1 - Skeleton frontend Vite + React
 
@@ -372,7 +372,7 @@ menjadi:
 db.AutoMigrate(&model.User{}, &model.Kategori{}, &model.Barang{}, &model.Peminjaman{})
 ```
 
-Kalau jobdesk-2 belum merge saat kamu mengerjakan langkah ini, baris awalnya masih `db.AutoMigrate(&model.Barang{})` (versi jobdesk-1). Ubah langsung ke baris final di atas; konflik di baris ini diselesaikan dengan memakai baris final ini.
+Kalau jobdesk-2 belum push ke main saat kamu mengerjakan langkah ini, baris awalnya masih `db.AutoMigrate(&model.Barang{})` (versi jobdesk-1). Ubah langsung ke baris final di atas; kalau push kamu ditolak karena main sudah maju, `git pull` dulu dan selesaikan konflik di baris ini dengan memakai baris final ini, lalu push lagi.
 
 Ganti blok gate seed barang (versi jobdesk-1) berikut:
 
@@ -1201,7 +1201,7 @@ menjadi (kelompok: Apriyudha H1H024010, Difa' Tamaya Maulidina Adz Dzikro H1H024
 
 Contoh di atas memakai urutan nama sesuai urutan jobdesk; sesuaikan dengan pembagian yang disepakati kelompok. Setelah video presentasi diunggah ke YouTube, ganti `(menyusul)` di bagian Video Presentasi dengan tautan videonya. **Commit:** `docs: isi jobdesk + tautan video di README` → push boleh.
 
-Cek deployment (setelah semua jobdesk merge ke `main` dan aplikasi sudah di-deploy):
+Cek deployment (setelah semua jobdesk push ke `main` dan aplikasi sudah di-deploy):
 
 ```bash
 curl -s https://api-invilab.apriyudha.my.id/api/status
@@ -1215,7 +1215,7 @@ curl -s -o /dev/null -w "%{http_code}\n" https://invilab.apriyudha.my.id/barang
 
 URL frontend dan backend harus tetap aktif sampai penilaian selesai.
 
-## Langkah 12 - Verifikasi akhir (semua jobdesk sudah merge)
+## Langkah 12 - Verifikasi akhir (semua jobdesk sudah push ke main)
 
 Jalankan dari basis data kosong (hapus database `invilab` lalu buat lagi, atau pakai database baru) supaya seed berjalan penuh:
 
@@ -1277,4 +1277,4 @@ Cek di browser (http://localhost:8080): login sebagai anggota, pastikan tombol T
 - [ ] Pagination tampil di ketiga tabel; pencarian barang dan filter peminjaman bekerja
 - [ ] Refresh di route selain beranda tidak 404
 - [ ] README sudah berisi nama + jobdesk tiap anggota dan tautan video
-- [ ] Merge ke `main` via PR, 1 approve teman
+- [ ] Semua langkah sudah di-push langsung ke `main`
