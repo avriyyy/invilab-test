@@ -244,7 +244,7 @@ Aturan: `jobdesk-1` dulu (fondasi). `jobdesk-2` dan `jobdesk-3` mulai setelah `j
 
 | File | Pemilik | Yang ditambahkan jobdesk lain (hanya di titik yang ditandai di md-nya) |
 | ---- | ------- | ------- |
-| `backend/internal/model/models.go` | Jobdesk 1 (kerangka + Barang) | Jobdesk 2: struct User, Peminjaman, request auth + peminjaman. Jobdesk 3: struct Kategori + request kategori |
+| `backend/internal/model/models.go` | Jobdesk 1 (kerangka + Barang + struct Kategori + struct Peminjaman) | Jobdesk 2: struct User, request auth + peminjaman. Jobdesk 3: request kategori (struct Kategori dan Peminjaman sudah ada di kerangka; Kategori dipakai foreign key Barang, Peminjaman dipakai guard hapus Barang) |
 | `backend/internal/router/router.go` | Jobdesk 1 (status + barang) | Jobdesk 2: route `/api/auth` + `/api/peminjaman`. Jobdesk 3: route `/api/kategori` |
 | `backend/cmd/api/main.go` | Jobdesk 1 | Jobdesk 2 dan 3: tambah model di baris `AutoMigrate` |
 | `backend/internal/seed/seed.go` | Jobdesk 1 (seed barang) | Jobdesk 2: akun demo + seed peminjaman. Jobdesk 3: seed kategori |

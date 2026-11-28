@@ -85,11 +85,11 @@ func HanyaPeran(peran ...string) fiber.Handler {
 }
 ```
 
-## Langkah 2 - Model User + Peminjaman (sisipan di models.go)
+## Langkah 2 - Model User (sisipan di models.go)
 
-File `models.go` milik jobdesk-1. Kamu hanya menambahkan snippet berikut di titik yang ditandai, jangan menulis ulang file-nya. **Commit:** `feat: model User + Peminjaman` → push boleh.
+File `models.go` milik jobdesk-1. Struct Peminjaman sudah ditulis jobdesk-1 di kerangka (dipakai guard hapus Barang). Kamu hanya menambahkan struct User dan request di titik yang ditandai, jangan menulis ulang file-nya. **Commit:** `feat: model User` → push boleh.
 
-Sisipkan struct User tepat sebelum komentar `// Barang adalah barang inventaris laboratorium.`:
+Sisipkan struct User tepat sebelum komentar `// Kategori mengelompokkan barang.`:
 
 **Path:** `backend/internal/model/models.go`
 
@@ -105,27 +105,6 @@ type User struct {
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
-}
-```
-
-Sisipkan struct Peminjaman tepat sebelum `type BarangRequest struct {`:
-
-**Path:** `backend/internal/model/models.go`
-
-```go
-// Peminjaman mencatat peminjaman satu barang oleh satu peminjam.
-type Peminjaman struct {
-	ID             uint           `gorm:"primaryKey" json:"id"`
-	BarangID       uint           `gorm:"not null;index" json:"barang_id"`
-	Barang         Barang         `gorm:"foreignKey:BarangID" json:"barang"`
-	NamaPeminjam   string         `gorm:"size:100;not null" json:"nama_peminjam"`
-	NIM            string         `gorm:"size:20;not null" json:"nim"`
-	TanggalPinjam  time.Time      `gorm:"not null" json:"tanggal_pinjam"`
-	TanggalKembali *time.Time     `json:"tanggal_kembali"`
-	Status         string         `gorm:"size:20;not null;default:Dipinjam" json:"status"`
-	CreatedAt      time.Time      `json:"created_at"`
-	UpdatedAt      time.Time      `json:"updated_at"`
-	DeletedAt      gorm.DeletedAt `gorm:"index" json:"-"`
 }
 ```
 

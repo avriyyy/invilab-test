@@ -258,7 +258,7 @@ docker compose up -d db   # MySQL lokal di 127.0.0.1:3306, database invilab
 
 ## Langkah 2 - Model Barang + kerangka models.go
 
-File `models.go` adalah file bersama. Kamu menulis kerangkanya + model Barang. Jobdesk-2 menambahkan struct User, Peminjaman, dan request auth + peminjaman di titik yang ditandai di bawah. Jobdesk-3 menambahkan struct Kategori dan request kategori. Jangan tulis model lain di file ini. **Commit:** `feat: model Barang` → push boleh.
+File `models.go` adalah file bersama. Kamu menulis kerangkanya + model Barang + struct Kategori + struct Peminjaman. Struct Kategori dan Peminjaman ikut ditulis di sini (bukan di jobdesk-3/jobdesk-2) karena kode jobdesk-1 sudah memakai tipenya: `Barang` punya foreign key ke `Kategori`, dan guard hapus Barang mengecek tabel peminjaman; tipenya harus sudah ada supaya backend bisa di-build dan jalan di tahap ini. CRUD Kategori dan CRUD Peminjaman (handler, route, halaman) tetap milik jobdesk-3 dan jobdesk-2. Jobdesk-2 menambahkan struct User dan request auth + peminjaman di titik yang ditandai di bawah. Jobdesk-3 menambahkan request kategori. Jangan tulis model lain di file ini. **Commit:** `feat: model Barang + Kategori + Peminjaman` → push boleh.
 
 **Path:** `backend/internal/model/models.go`
 
@@ -270,6 +270,17 @@ import (
 
 	"gorm.io/gorm"
 )
+
+// Kategori mengelompokkan barang. Satu kategori punya banyak barang.
+type Kategori struct {
+	ID        uint           `gorm:"primaryKey" json:"id"`
+	Nama      string         `gorm:"size:100;uniqueIndex;not null" json:"nama"`
+	Deskripsi string         `gorm:"size:255" json:"deskripsi"`
+	Barang    []Barang       `gorm:"foreignKey:KategoriID" json:"barang,omitempty"`
+	CreatedAt time.Time      `json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
+}
 
 // Barang adalah barang inventaris laboratorium.
 type Barang struct {
@@ -286,6 +297,21 @@ type Barang struct {
 	DeletedAt  gorm.DeletedAt `gorm:"index" json:"-"`
 }
 
+// Peminjaman mencatat peminjaman satu barang oleh satu peminjam.
+type Peminjaman struct {
+	ID             uint           `gorm:"primaryKey" json:"id"`
+	BarangID       uint           `gorm:"not null;index" json:"barang_id"`
+	Barang         Barang         `gorm:"foreignKey:BarangID" json:"barang"`
+	NamaPeminjam   string         `gorm:"size:100;not null" json:"nama_peminjam"`
+	NIM            string         `gorm:"size:20;not null" json:"nim"`
+	TanggalPinjam  time.Time      `gorm:"not null" json:"tanggal_pinjam"`
+	TanggalKembali *time.Time     `json:"tanggal_kembali"`
+	Status         string         `gorm:"size:20;not null;default:Dipinjam" json:"status"`
+	CreatedAt      time.Time      `json:"created_at"`
+	UpdatedAt      time.Time      `json:"updated_at"`
+	DeletedAt      gorm.DeletedAt `gorm:"index" json:"-"`
+}
+
 type BarangRequest struct {
 	KodeBarang string `json:"kode_barang" validate:"required,min=2,max=50"`
 	Nama       string `json:"nama" validate:"required,min=2,max=150"`
@@ -298,9 +324,7 @@ type BarangRequest struct {
 
 Titik sisip untuk jobdesk lain (jangan diisi sekarang, hanya penanda):
 
-- Struct `User` (jobdesk-2) disisipkan tepat sebelum komentar `// Barang adalah barang inventaris laboratorium.`
-- Struct `Kategori` (jobdesk-3) disisipkan tepat sebelum komentar `// Barang adalah barang inventaris laboratorium.`, setelah struct `User`.
-- Struct `Peminjaman` (jobdesk-2) disisipkan tepat sebelum `type BarangRequest struct {`.
+- Struct `User` (jobdesk-2) disisipkan tepat sebelum komentar `// Kategori mengelompokkan barang.` (struct Kategori sudah ada di file ini, ditulis jobdesk-1).
 - Request `RegisterRequest`, `LoginRequest` (jobdesk-2) disisipkan tepat sebelum `type BarangRequest struct {`, dan `PeminjamanRequest` (jobdesk-2) ditambahkan di akhir file.
 - Request `KategoriRequest` (jobdesk-3) disisipkan tepat sebelum `type BarangRequest struct {`, setelah `LoginRequest`.
 

@@ -183,26 +183,9 @@ dist
 
 Catatan: `npm run dev` baru bisa jalan setelah Langkah 7 (`App.jsx`) selesai, karena `main.jsx` mengimpor `App.jsx`. Sampai saat itu, cek file per file dengan `npx oxlint <file>`.
 
-## Langkah 2 - Model Kategori (sisipan di models.go)
+## Langkah 2 - Request Kategori (sisipan di models.go)
 
-File `models.go` milik jobdesk-1. Kamu hanya menambahkan snippet berikut di titik yang ditandai, jangan menulis ulang file-nya. **Commit:** `feat: model Kategori` → push boleh.
-
-Sisipkan struct Kategori tepat sebelum komentar `// Barang adalah barang inventaris laboratorium.`, setelah struct `User` (yang ditulis jobdesk-2):
-
-**Path:** `backend/internal/model/models.go`
-
-```go
-// Kategori mengelompokkan barang. Satu kategori punya banyak barang.
-type Kategori struct {
-	ID        uint           `gorm:"primaryKey" json:"id"`
-	Nama      string         `gorm:"size:100;uniqueIndex;not null" json:"nama"`
-	Deskripsi string         `gorm:"size:255" json:"deskripsi"`
-	Barang    []Barang       `gorm:"foreignKey:KategoriID" json:"barang,omitempty"`
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
-	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
-}
-```
+File `models.go` milik jobdesk-1. Struct Kategori sudah ditulis jobdesk-1 di kerangka (dipakai foreign key Barang). Kamu hanya menambahkan request kategori di titik yang ditandai, jangan menulis ulang file-nya. **Commit:** `feat: request Kategori` → push boleh.
 
 Sisipkan request kategori tepat sebelum `type BarangRequest struct {`, setelah `LoginRequest`:
 
